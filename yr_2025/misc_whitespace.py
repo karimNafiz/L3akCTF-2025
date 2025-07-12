@@ -1,47 +1,52 @@
-# plan
-# read the file
-# u know the number of rows
-# you know the column
-# we need to account for a space so column is no_column + no_of space 
-# range of ascii characters 33 to 126 includsive
-
 import numpy as np
 
 rows = 5
 columns = 3
-len_seperator = 1
-file_name = 'input.txt' # relative path 
+len_separator = 1
+file_name = 'input (1).txt'
 
-ascii_range_start = 33
-ascii_range_end = 126
+ascii_start = 33
+ascii_end   = 126
 
+def read_file(file_path):
 
-
-def read_file(file_path): # should return a 2d grid
-    # this grid will hold all the characters read from the file
-    # grid will be of dimension (row_number , (rows + len_seperator)* no_of_characters)
     grid = []
-    with open(file_path , 'r') as f:
+    with open(file_path, 'r') as f:
         for line in f:
-            grid.append(line)
-    return grid 
+            # strip newline, then turn into list of chars
+            grid.append(list(line.rstrip('\n')))
+    return grid
 
-def parse_grid(grid ,column_count, len_seperator, ascii_start, ascii_end ):
-    dict = {}
-    for i in range(ascii_start , ascii_end + 1 , 1):
-        # need to normalize
-        z = i - ascii_start
-        dict[chr(i)] = grid[:][z * (column_count + len_seperator) : (column_count + len_seperator)]
-    return dict 
+def parse_grid(grid, column_count, len_separator, ascii_start, ascii_end):
 
+    char_dict = {}
+    width = column_count + len_separator
+    
+
+    for code in range(ascii_start, ascii_end + 1):
+        z = code - ascii_start
+        start = z * width
+        end   = start + column_count
+
+        # print(chr(code))
+        # # # print(f'start {start}')
+        # # # print(f'end {end}')
+        # print(grid[: , start : end])
+        char_dict[chr(code)] = grid[: , start : end ]
+        
+        
+
+
+    return char_dict
 
 def main():
-    grid = read_file(file_name)
-    # create a numpy array from python ass manual list
-    np_grid = np.array(grid)
-    dict = parse_grid(np_grid, columns , len_seperator , ascii_range_start , ascii_range_end)
-    print(dict['c'])
 
+    grid = read_file(file_name)
+    np_grid = np.array(grid)
+    #print(np_grid[0])
+    dict = parse_grid(np_grid, columns, len_separator, ascii_start, ascii_end)
+
+    print(dict['b'])
 
 if __name__ == "__main__":
     main()
