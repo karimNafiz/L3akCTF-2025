@@ -95,6 +95,57 @@ def concat_two_tokens_from_np_arr(np_arr1 , np_arr2):
         final_str += '\n'
     return final_str
 
+def find_all_combination(dict_token):
+    dict_all_combo = {}
+    # here we go 
+    for key1 , val1 in dict_token.items():
+        for key2 , val2 in dict_token.items():
+            dict_all_combo[key1 + key2] = concat_two_tokens_from_np_arr(val1 , val2)
+    return dict_all_combo
+
+def reverser_dict(dict):
+    reversed_dict = {}
+    for key , val in dict.items():
+        reversed_dict[val] = key
+    return reversed_dict
+
+def read_flag_file_and_compare(flag_file_name, dict_all_combos , row_count):
+    list_possible_combos = []
+    with open(flag_file_name , 'r') as f:
+        stripped_line = ""
+        token_read = ""
+        x = 0
+        counter = 0
+        for line in f:
+            if x == row_count:
+                # i will do this after testing the code 
+                list_possible_combos.append(get_letter_combos_from_token(token_read , dict_all_combos))
+                x = 0
+                counter += 1
+                # print(token_read , end="")
+                token_read = ""
+                # print('token break')
+                continue
+
+            stripped_line = line.lstrip(" ")
+            #print(f'line - {stripped_line}' , end = "")
+            token_read += stripped_line
+            x += 1
+    print(f'tokens read {counter}')
+    return list_possible_combos
+
+
+def get_letter_combos_from_token(token, dict_all_combos):
+    # very inefficient process good luck
+    combo_list = [] 
+    for key , val in dict_all_combos.items():
+        if token == val:
+            combo_list.append(key)
+    return combo_list
+
+
+
+
 
 
 def main():
@@ -107,9 +158,29 @@ def main():
     # for key , value in dict.items():
     # #     dict_string[key] = convert_2d_array_str(value)
     # print(concat_two_tokens(dict_string['L'] , dict_string['3'] , 3 , 5))
-    print(dict['L'])
-    print(dict['3'])
-    print(concat_two_tokens_from_np_arr(dict['L'] , dict['3']))
+    # print(dict['L'])
+    # print(dict['3'])
+    # print(concat_two_tokens_from_np_arr(dict['L'] , dict['3']))
+    dict_all_combos = find_all_combination(dict)
+    # dict_all_combo_reverse = reverser_dict(dict_all_combo)
+    # print(dict_all_combo_reverse[dict_all_combo['L3']])
+    
+    # print(dict_all_combo['L3'])
+    # print(dict_all_combo['LE'])
+    # comb_set = set()
+    # for key , val in dict_all_combo.items():
+    #     comb_set.add(val)
+    
 
+    # print(f'len of dict_all_combo {len(dict_all_combo)}')
+    # print(f'len of the set of all combos {len(comb_set)}')
+
+    list_possible_combos = read_flag_file_and_compare('flag_copy.txt', dict_all_combos , rows)
+    print(len(list_possible_combos))
+    k=1
+    for x in list_possible_combos:
+        k=k*len(x)
+        print(x)
+    print(k)
 if __name__ == "__main__":
     main()
